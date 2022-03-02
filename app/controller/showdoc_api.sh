@@ -2,8 +2,8 @@
 #
 # 文档说明： https://www.showdoc.com.cn/page/741656402509783
 #
-api_key="cfceb1a25745a5937b9ca61903bf32c31175586523" #api_key
-api_token="76c20a2f5e876f915801e20fd8676bbf1906603563" #api_token
+api_key="#######" #showdoc项目api_key
+api_token="#######" #showdoc项目api_token
 url="https://www.showdoc.com.cn/server/?s=/api/open/fromComments" #同步到的url。使用www.showdoc.com.cn的不需要修改，使用私有版的请修改
 #
 #

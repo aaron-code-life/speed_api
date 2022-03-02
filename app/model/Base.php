@@ -16,7 +16,7 @@ class Base extends Model
             $this->connection = $connections[$domain];
         }else{
             //TODO::这里随便写了一个后面要拓展再说
-            $this->connection = 'mysql1';
+            $this->connection = 'mysql';
         }
     }
 }

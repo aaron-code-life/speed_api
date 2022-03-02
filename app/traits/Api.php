@@ -6,7 +6,7 @@ use think\facade\Db;
 
 trait Api {
 
-    //验证
+    //验证 cd ~/homestead && vagrant reload && vagrant provision
     protected function validateAction($params,$scene,$notice){
         if(!$this->validate) return;
         $validate = str_replace("\\model\\", "\\validate\\", get_class($this->model));

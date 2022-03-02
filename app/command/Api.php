@@ -25,6 +25,9 @@ class Api extends Command
 
     protected function execute(Input $input, Output $output)
     {
+
+        $database = env('database.database', '');
+        $prefix = env('database.prefix', '');
         //表名
         $table = trim($input->getArgument('table'));
         if ($input->hasOption('force') && $input->getOption('force') == 'true') {
@@ -34,17 +37,17 @@ class Api extends Command
         $table_comment_u = $table;
         $model_name = ucwords($this->toCamelCase($table));
         $dbconnect = Db::connect('mysql');
-
+        $table = $prefix.$table;
         //获取表的构建语句
-        $create_table_sql = $dbconnect->query("show create table bb_{$table}", [], true);
+        $create_table_sql = $dbconnect->query("show create table {$table}", [], true);
         $create_table_sql = $create_table_sql[0]['Create Table'];
         //获取表信息
-        $table_info = $dbconnect->query("SHOW TABLE STATUS LIKE 'bb_{$table}'", [], true);
+        $table_info = $dbconnect->query("SHOW TABLE STATUS LIKE '{$table}'", [], true);
 
         $table_comment = $table_info[0]['Comment'];
 
         $table_comment = mb_substr($table_comment, -1) == '表' ? mb_substr($table_comment, 0, -1) : $table_comment;
-        //从数据库中获取表字段信息 show create table bb_user
+        //从数据库中获取表字段信息 show create table user
         $sql = "SELECT * FROM `information_schema`.`columns` "
             . "WHERE TABLE_SCHEMA = ? AND table_name = ? "
             . "ORDER BY ORDINAL_POSITION";
@@ -57,7 +60,7 @@ class Api extends Command
             'data' => [],
         ];
 
-        $columnList = $dbconnect->query($sql, ['bangbang', "bb_{$table}"]);
+        $columnList = $dbconnect->query($sql, [$database, $prefix."{$table}"]);
 
         $apiAddDoc = [
             0=>"\n\t/**",

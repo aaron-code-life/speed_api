@@ -22,6 +22,7 @@ Route::group(function(){
     /*游客路由*/
     Route::group(function(){
         Route::post('dologin','Login/dologin');//登录
+        Route::get('test','Test/index');//登录
     })->middleware('visitor');
 
 })->middleware(['throttle']);//限流中间件
