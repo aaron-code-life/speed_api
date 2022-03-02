@@ -14,12 +14,14 @@ class Api extends Command
 {
     protected $ds = "/";
     protected $force = false;
+    protected $file = [];
     protected function configure()
     {
         // 指令配置
         $this->setName('api')
             ->addArgument('table', Argument::OPTIONAL, "需要生成的表")
             ->addOption('force', null, Option::VALUE_REQUIRED, '强制覆盖')
+            ->addOption('file', null, Option::VALUE_REQUIRED, '指定生成文件；m代表模型，v代表验证器，c代表控制器，s代表事件订阅，多个逗号隔开')
             ->setDescription('根据表名生成所需要的类例如：php think api user 为生成user表的控制器-模型-验证器类');
     }
 
@@ -32,6 +34,9 @@ class Api extends Command
         $table = trim($input->getArgument('table'));
         if ($input->hasOption('force') && $input->getOption('force') == 'true') {
             $this->force = true;
+        }
+        if ($input->hasOption('file')) {
+            $this->file = explode(',',$input->getOption('file'));
         }
         //类名
         $table_comment_u = $table;
@@ -108,52 +113,73 @@ class Api extends Command
 
         //生成模型
         $mpath = app_path() . $this->ds . 'model' . $this->ds . $model_name . '.php';
-        if(!file_exists($mpath) || $this->force) {
-            $this->writeToFile('model', [
-                'table_comment' => $table_comment,
-                'create_table_sql'=>$create_table_sql,
-                'table_comment_u'=>$table_comment_u,
-                'class_name' => $model_name
-            ], $mpath);
-            $output->writeln("model/{$model_name}.php-新建成功");
-        }else{
-            $output->writeln($mpath.'文件已存在');
+        if(in_array('m',$this->file)){
+            if(!file_exists($mpath) || $this->force) {
+                $this->writeToFile('model', [
+                    'table_comment' => $table_comment,
+                    'create_table_sql'=>$create_table_sql,
+                    'table_comment_u'=>$table_comment_u,
+                    'class_name' => $model_name
+                ], $mpath);
+                $output->writeln("model/{$model_name}.php-新建成功");
+            }else{
+                $output->writeln($mpath.'文件已存在');
+            }
         }
-        //生成控制器use hg\apidoc\annotation as Apidoc;
+
+        //生成控制器
         $cpath = app_path() . $this->ds . 'controller' . $this->ds . $model_name . '.php';
-        if(!file_exists($cpath) || $this->force) {
-            ksort($apiAddDoc);
-            $apiAddDoc = implode("\n\t", array_values($apiAddDoc));
-            $this->writeToFile('controller', [
-                'table_comment' => $table_comment,
-                'apiAddDoc' => $apiAddDoc,
-                'class_name' => $model_name
-            ], $cpath);
-            $output->writeln("controller/{$model_name}.php-新建成功");
-        }else{
-            $output->writeln($cpath.'文件已存在');
+        if(in_array('c',$this->file)){
+            if(!file_exists($cpath) || $this->force) {
+                ksort($apiAddDoc);
+                $apiAddDoc = implode("\n\t", array_values($apiAddDoc));
+                $this->writeToFile('controller', [
+                    'table_comment' => $table_comment,
+                    'apiAddDoc' => $apiAddDoc,
+                    'class_name' => $model_name
+                ], $cpath);
+                $output->writeln("controller/{$model_name}.php-新建成功");
+            }else{
+                $output->writeln($cpath.'文件已存在');
+            }
         }
 
+        //生成验证器
         $vpath = app_path().$this->ds.'validate'.$this->ds.$model_name.'.php';
-        if(!file_exists($vpath) || $this->force){
-            //生成验证器
-            $vrule = implode("\n\t\t", array_values($vrule));
-            $vmessage = implode("\n\t\t", array_values($vmessage));
-            $vscene = implode("\n\t\t\t", array_values($vscene));
-            $this->writeToFile('validate',[
-                'table_comment'=>$table_comment,
-                'vrule'=>$vrule,
-                'vmessage'=>$vmessage,
-                'vscene'=>$vscene,
-                'class_name'=>$model_name,
-                'create_table_sql'=>$create_table_sql,
-            ],$vpath);
-            $output->writeln("validate/{$model_name}.php-新建成功");
-        }else{
-            $output->writeln($vpath.'文件已存在');
+        if(in_array('v',$this->file)){
+            if(!file_exists($vpath) || $this->force){
+                //生成验证器
+                $vrule = implode("\n\t\t", array_values($vrule));
+                $vmessage = implode("\n\t\t", array_values($vmessage));
+                $vscene = implode("\n\t\t\t", array_values($vscene));
+                $this->writeToFile('validate',[
+                    'table_comment'=>$table_comment,
+                    'vrule'=>$vrule,
+                    'vmessage'=>$vmessage,
+                    'vscene'=>$vscene,
+                    'class_name'=>$model_name,
+                    'create_table_sql'=>$create_table_sql,
+                ],$vpath);
+                $output->writeln("validate/{$model_name}.php-新建成功");
+            }else{
+                $output->writeln($vpath.'文件已存在');
+            }
         }
 
-
+        //生成订阅事件
+        $spath = app_path() . $this->ds . 'subscribe' . $this->ds . $model_name . '.php';
+        if(in_array('s',$this->file)){
+            if(!file_exists($spath) || $this->force) {
+                $this->writeToFile('subscribe', [
+                    'table_comment' => $table_comment,
+                    'table_comment_u'=>$table_comment_u,
+                    'class_name' => $model_name
+                ], $spath);
+                $output->writeln("subscribe/{$model_name}.php-新建成功");
+            }else{
+                $output->writeln($spath.'文件已存在');
+            }
+        }
 
     }
 

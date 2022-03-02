@@ -8,4 +8,30 @@ class {{class_name}} extends Base
         /*
     {{create_table_sql}}
          * */
+
+    /* 以下是当前模型的事件，建议充分利用模型事件，可以更好的解耦 */
+    //查询后
+    public static function onAfterRead(${{table_comment_u}}){}
+    //新增前
+    public static function onBeforeInsert(${{table_comment_u}}){}
+    //新增后
+    public static function onAfterInsert(${{table_comment_u}}){}
+    //更新前
+    public static function onBeforeUpdate(${{table_comment_u}}){}
+    //更新后
+    public static function onAfterUpdate(${{table_comment_u}}){}
+    //写入前
+    public static function onBeforeWrite(${{table_comment_u}}){}
+    //写入后
+    public static function onAfterWrite(${{table_comment_u}}){}
+    //删除前
+    public static function onBeforeDelete(${{table_comment_u}}){}
+    //删除后
+    public static function onAfterDelete(${{table_comment_u}}){}
+    //恢复前
+    public static function onBeforeRestore(${{table_comment_u}}){}
+    //恢复后
+    public static function onAfterRestore(${{table_comment_u}}){}
+
+
 }

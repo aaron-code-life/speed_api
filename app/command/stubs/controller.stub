@@ -6,6 +6,15 @@ namespace app\controller;
  */
 class {{class_name}} extends Base
 {
+
+    protected $addEvent = ['{{class_name}}Add'];//新增前
+    protected $addedEvent = ['{{class_name}}Added'];//新增后
+    protected $editEvent = ['{{class_name}}Edit'];//编辑前
+    protected $editedEvent = ['{{class_name}}Edited'];//编辑后
+    protected $deleteEvent = ['{{class_name}}Delete'];//删除前
+    protected $deletedEvent = ['{{class_name}}Deleted'];//删除后
+
+    //初始化
     public function initialize()
     {
         parent::initialize();

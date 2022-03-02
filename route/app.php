@@ -10,8 +10,26 @@
 // +----------------------------------------------------------------------
 use think\facade\Route;
 
-Route::get('think', function () {
-    return 'hello,ThinkPHP6!';
-});
+Route::group(function(){
 
-Route::get('hello/:name', 'index/hello');
+    /*登录者路由*/
+    Route::group(function(){
+
+        Route::get('refresh_token','Login/refreshToken');//刷新token
+        Route::post('user/detail','User/detail');//刷新token
+
+    })->middleware(['auth']);
+
+    /*游客路由*/
+    Route::group(function(){
+
+        Route::post('dologin','Login/dologin');//登录
+        Route::get('test','Test/index');//登录
+
+    })->middleware('visitor');
+
+})->middleware(['throttle']);//限流中间件
+
+Route::miss(function() {
+    api_error('地址不存在',404);
+});

@@ -1,0 +1,41 @@
+<?php
+declare (strict_types = 1);
+
+namespace app\subscribe;
+
+/*{{table_comment}}事件订阅*/
+class {{class_name}}
+{
+
+    /* 以下方法不局限于命名，你可以在添加事件在控制器中按实际逻辑随意搭配 */
+
+    /*
+     * @$arg['params'] 触发时间方法接收的参数-引用传值，对参数做修改会影响方法中的值
+     * @$arg['model'] 触发事件的模型
+     * */
+    public function on{{class_name}}Add($arg){
+        //新增前逻辑
+        $arg['params']['name'] = $arg['params']['name'].'大漂亮';
+    }
+
+    public function on{{class_name}}Added($arg){
+        //新增后逻辑
+    }
+
+    public function on{{class_name}}Edit($arg){
+        //编辑前逻辑
+    }
+
+    public function on{{class_name}}Edited($arg){
+        //编辑后逻辑
+    }
+
+    public function on{{class_name}}Delete($arg){
+        //删除前逻辑
+    }
+
+    public function on{{class_name}}Deleted($arg){
+        //删除后逻辑
+    }
+
+}

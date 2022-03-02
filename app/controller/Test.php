@@ -6,6 +6,15 @@ namespace app\controller;
  */
 class Test extends Base
 {
+
+    protected $addEvent = ['TestAdd'];//新增前
+    protected $addedEvent = ['TestAdded'];//新增后
+    protected $editEvent = ['TestEdit'];//编辑前
+    protected $editedEvent = ['TestEdited'];//编辑后
+    protected $deleteEvent = ['TestDelete'];//删除前
+    protected $deletedEvent = ['TestDeleted'];//删除后
+
+    //初始化
     public function initialize()
     {
         parent::initialize();
