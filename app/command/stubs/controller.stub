@@ -1,0 +1,20 @@
+<?php
+namespace app\controller;
+
+/**
+ * {{table_comment}}
+ */
+class {{class_name}} extends Base
+{
+    public function initialize()
+    {
+        parent::initialize();
+        $this->model = new \app\model\{{class_name}}();
+    }
+
+    {{apiAddDoc}}
+    public function add(){
+        parent::add();
+    }
+
+}

@@ -1,0 +1,24 @@
+<?php
+namespace app\validate;
+use think\Validate;
+/**
+ * {{table_comment}}验证器
+ */
+class {{class_name}} extends Validate
+{
+    /*
+{{create_table_sql}}
+     * */
+    protected $rule = [
+        {{vrule}}
+    ];
+
+    protected $message = [
+        {{vmessage}}
+    ];
+
+    protected $scene = [
+        {{vscene}}
+    ];
+
+}

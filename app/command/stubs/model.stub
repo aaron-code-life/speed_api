@@ -1,0 +1,11 @@
+<?php
+namespace app\model;
+/**
+ * {{table_comment}}模型
+ */
+class {{class_name}} extends Base
+{
+        /*
+    {{create_table_sql}}
+         * */
+}
