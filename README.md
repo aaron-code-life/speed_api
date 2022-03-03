@@ -13,6 +13,10 @@ php think api user
  ```
 php think api user --force=true
 ```
+* 如果需要要指定生成文件、执行以下命令,说明：指定生成文件；m代表模型，v代表验证器，c代表控制器，s代表事件订阅，多个逗号隔开
+ ```
+php think api user --file=m,v,c
+```
 
  ## · 接口文档生成
  * 控制器目录controller下有个 showdoc_api.sh 具体命令如下
