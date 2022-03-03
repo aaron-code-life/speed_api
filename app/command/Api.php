@@ -74,7 +74,8 @@ class Api extends Command
             3=>'* @title 新增'.$table_comment,
             4=>'* @description 新增'.$table_comment,
             5=>'* @method post',
-            6=>'* @url /api/写上你设置的的路由！！！！'
+            6=>'* @url /api/写上你设置的的路由！！！！',
+            7=>'* @header token 必选 string token'
         ];
 
         //生成接口文档验证器规则 message scene
@@ -87,9 +88,9 @@ class Api extends Command
             $return_data['data'][$v['COLUMN_NAME']] = $v['COLUMN_COMMENT'];
             //* @return_param meat int 分页数据,总共几条
             //$apiAddDoc[$k+7] = "* @Apidoc\Param(\"{$v['COLUMN_NAME']}\", type=\"{$v['DATA_TYPE']}\",default=\"{$v['COLUMN_DEFAULT']}\" ,require=true, desc=\"{$v['COLUMN_COMMENT']}\")";//
-            $apiAddDoc[$k+7] = "* @param {$v['COLUMN_NAME']} 必选 {$v['DATA_TYPE']} {$v['COLUMN_COMMENT']}";//
+            $apiAddDoc[$k+8] = "* @param {$v['COLUMN_NAME']} 必选 {$v['DATA_TYPE']} {$v['COLUMN_COMMENT']}";//
             //$apiAddDoc[$k+7+count($columnList)] = "* @Apidoc\Returned(\"{$v['COLUMN_NAME']}\",default=\"{$v['COLUMN_DEFAULT']}\", type=\"{$v['DATA_TYPE']}\",desc=\"{$v['COLUMN_COMMENT']}\")";//
-            $apiAddDoc[$k+7+count($columnList)+1] = "* @return_param {$v['COLUMN_NAME']} {$v['DATA_TYPE']} {$v['COLUMN_COMMENT']}";
+            $apiAddDoc[$k+8+count($columnList)+2] = "* @return_param {$v['COLUMN_NAME']} {$v['DATA_TYPE']} {$v['COLUMN_COMMENT']}";
             $vmessage[] = "'{$v['COLUMN_NAME']}.require'  => '{$v['COLUMN_COMMENT']}必须填写',//{$v['COLUMN_COMMENT']}";
             $max = "";
 
@@ -108,12 +109,15 @@ class Api extends Command
             $vscene[] = "'{$v['COLUMN_NAME']}',";
         }
         $vscene[] = "],";
-        $apiAddDoc[count($columnList)+7] = "* @return ".json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        $apiAddDoc[count($columnList)+8] = "* @json_param ".json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        $apiAddDoc[count($columnList)+9] = "* @return ".json_encode($return_data,JSON_UNESCAPED_UNICODE);
+        $apiAddDoc[] = "* @remark 这里是备注信息";
+        $apiAddDoc[] = "* @number 99";
         $apiAddDoc[] = "*/";
 
         //生成模型
         $mpath = app_path() . $this->ds . 'model' . $this->ds . $model_name . '.php';
-        if(in_array('m',$this->file)){
+        if(empty($this->file) || in_array('m',$this->file)){
             if(!file_exists($mpath) || $this->force) {
                 $this->writeToFile('model', [
                     'table_comment' => $table_comment,
@@ -129,7 +133,7 @@ class Api extends Command
 
         //生成控制器
         $cpath = app_path() . $this->ds . 'controller' . $this->ds . $model_name . '.php';
-        if(in_array('c',$this->file)){
+        if(empty($this->file) || in_array('c',$this->file)){
             if(!file_exists($cpath) || $this->force) {
                 ksort($apiAddDoc);
                 $apiAddDoc = implode("\n\t", array_values($apiAddDoc));
@@ -146,7 +150,7 @@ class Api extends Command
 
         //生成验证器
         $vpath = app_path().$this->ds.'validate'.$this->ds.$model_name.'.php';
-        if(in_array('v',$this->file)){
+        if(empty($this->file) || in_array('v',$this->file)){
             if(!file_exists($vpath) || $this->force){
                 //生成验证器
                 $vrule = implode("\n\t\t", array_values($vrule));
@@ -168,7 +172,7 @@ class Api extends Command
 
         //生成订阅事件
         $spath = app_path() . $this->ds . 'subscribe' . $this->ds . $model_name . '.php';
-        if(in_array('s',$this->file)){
+        if(empty($this->file) || in_array('s',$this->file)){
             if(!file_exists($spath) || $this->force) {
                 $this->writeToFile('subscribe', [
                     'table_comment' => $table_comment,
